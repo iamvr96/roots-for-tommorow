@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Roots for Tomorrow: volunteer sign-up</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EEF3E7; --surface:#FBFDF8; --ink:#17301F; --muted:#56695B;
+  --leaf:#2F7D43; --leaf-ink:#FFFFFF; --line:#CFDCC6; --field:#FFFFFF;
+  --danger:#B3382C; --tag:#F2C230; --sprout:#A9D65B;
+  --hero:#1F3D2B; --hero-ink:#F1F6EA; --hero-muted:#B5C9B4;
+  --display:"Bricolage Grotesque","Trebuchet MS","Segoe UI",sans-serif;
+  --body:"Instrument Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1D17; --surface:#172A21; --ink:#E9F2E4; --muted:#9DB3A2;
+    --leaf:#7CCB7F; --leaf-ink:#0F1D17; --line:#2A4234; --field:#10201A;
+    --danger:#F08A7E; --hero:#0A1611;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1D17; --surface:#172A21; --ink:#E9F2E4; --muted:#9DB3A2;
+  --leaf:#7CCB7F; --leaf-ink:#0F1D17; --line:#2A4234; --field:#10201A;
+  --danger:#F08A7E; --hero:#0A1611;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;-webkit-text-size-adjust:100%}
+h1,h2,h3{font-family:var(--display);margin:0;line-height:1.05;letter-spacing:-.02em}
+p{margin:0}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--tag);outline-offset:2px}
+.wrap{max-width:560px;margin:0 auto;padding:0 20px}
+
+/* hero */
+.hero{background:var(--hero);color:var(--hero-ink);padding:28px 0 32px;border-radius:0 0 28px 28px}
+.org{font-size:14px;color:var(--hero-muted);margin-bottom:18px}
+.hero h1{font-size:clamp(46px,15vw,76px);font-weight:800}
+.hero h1 span{display:block}
+.hero h1 .l2{color:var(--sprout)}
+.lede{margin-top:16px;font-size:17px;color:var(--hero-ink);max-width:34em}
+.where{margin-top:14px;font-size:15px;color:var(--hero-muted)}
+.where a{color:var(--hero-ink);text-underline-offset:3px}
+.pick{margin:28px 0 12px;font-family:var(--display);font-weight:700;font-size:20px}
+.trays{display:grid;gap:12px}
+@media (min-width:480px){.trays{grid-template-columns:1fr 1fr}}
+.tray{appearance:none;text-align:left;width:100%;cursor:pointer;background:rgba(255,255,255,.06);border:2px solid rgba(255,255,255,.14);border-radius:20px;padding:16px;color:var(--hero-ink);transition:border-color .15s,background .15s}
+.tray[aria-checked="true"]{border-color:var(--tag);background:rgba(242,194,48,.10)}
+.tray[disabled]{cursor:not-allowed;opacity:.72}
+.tray-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.tray-date{font-family:var(--display);font-weight:800;font-size:30px;line-height:1}
+.tray-sub{font-size:14px;color:var(--hero-muted);margin-top:4px}
+.radio{flex:none;width:22px;height:22px;border-radius:50%;border:2px solid rgba(255,255,255,.4);margin-top:3px;position:relative}
+.tray[aria-checked="true"] .radio{border-color:var(--tag)}
+.tray[aria-checked="true"] .radio::after{content:"";position:absolute;inset:4px;border-radius:50%;background:var(--tag)}
+.cells{display:grid;grid-template-columns:repeat(10,1fr);gap:4px;margin:14px 0 10px}
+.cell{aspect-ratio:1;border-radius:6px;background:rgba(255,255,255,.09);display:grid;place-items:center;position:relative}
+.cell::after{content:"";width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.25)}
+.cell.on{background:var(--sprout)}
+.cell.on::after{display:none}
+.cell.mine{background:var(--tag)}
+.cell svg{width:78%;height:78%;display:block}
+.cell.grow svg{animation:grow .9s cubic-bezier(.2,1.4,.4,1) both;transform-origin:50% 100%}
+@keyframes grow{from{transform:scale(0)}to{transform:scale(1)}}
+.tray-status{font-size:15px;font-weight:600}
+.tray-status.full{color:#FFB4A8}
+
+/* tabs */
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:rgba(255,255,255,.08);border-radius:14px;padding:4px;margin-bottom:22px}
+.tabs button{appearance:none;border:0;background:transparent;color:var(--hero-muted);font-weight:600;font-size:16px;min-height:44px;border-radius:10px;cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--hero-ink);color:#1F3D2B}
+.mode-checkin .lede,.mode-checkin .where,.mode-checkin .pick,.mode-checkin .trays{display:none}
+.mode-checkin .hero h1{font-size:clamp(34px,10vw,52px)}
+.code-in{font-family:var(--display);font-size:28px;font-weight:700;letter-spacing:.3em;text-align:center}
+.chk-ctl{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:10px;padding:12px 14px;background:var(--bg);border-radius:12px;font-size:15px}
+.chk-code{font-family:var(--display);font-weight:800;font-size:34px;letter-spacing:.12em;line-height:1}
+.mini{appearance:none;background:var(--surface);border:1.5px solid var(--line);border-radius:10px;padding:8px 14px;font-weight:600;font-size:14px;cursor:pointer;min-height:40px}
+.mini.on{background:var(--leaf);color:var(--leaf-ink);border-color:var(--leaf)}
+.reset{margin-top:22px;padding-top:16px;border-top:1px dashed var(--line)}
+.reset .btn{background:transparent;color:var(--danger);border:1.5px solid var(--danger)}
+
+.qr{margin-top:10px;display:flex;flex-direction:column;align-items:flex-start;gap:8px}
+.qr canvas{background:#fff;border-radius:12px;border:1px solid var(--line);max-width:100%;height:auto}
+.qr .url{font-size:13px;color:var(--muted);overflow-wrap:anywhere}
+
+/* sections */
+main{padding:8px 0 120px}
+section{margin-top:36px}
+h2{font-size:28px;font-weight:700}
+.sec-note{color:var(--muted);margin-top:6px;font-size:15px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:20px;margin-top:16px}
+
+/* agenda */
+.agenda{list-style:none;margin:16px 0 0;padding:0;position:relative}
+.agenda::before{content:"";position:absolute;left:83px;top:10px;bottom:10px;width:2px;background:var(--line)}
+.agenda li{display:grid;grid-template-columns:72px 1fr;gap:24px;padding:9px 0;position:relative}
+.agenda li::before{content:"";position:absolute;left:78px;top:16px;width:12px;height:12px;border-radius:50%;background:var(--bg);border:2px solid var(--leaf)}
+.agenda time{font-variant-numeric:tabular-nums;font-weight:600;font-size:15px;color:var(--muted);text-align:right;white-space:nowrap}
+.agenda .what{font-weight:500}
+.agenda li.key::before{background:var(--leaf)}
+
+.know{margin:14px 0 0;padding-left:20px}
+.know li{margin:6px 0}
+
+/* form */
+label{display:block;font-weight:600;font-size:15px;margin:16px 0 6px}
+.field{width:100%;background:var(--field);border:1.5px solid var(--line);border-radius:12px;padding:13px 14px;font-size:16px;min-height:50px}
+.field:focus{border-color:var(--leaf);outline:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--leaf) 25%,transparent)}
+.field[aria-invalid="true"]{border-color:var(--danger)}
+.err{color:var(--danger);font-size:14px;margin-top:5px;min-height:0}
+.chosen{display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--bg);border-radius:12px;padding:12px 14px;font-size:15px}
+.chosen strong{font-family:var(--display);font-size:18px}
+.link{background:none;border:0;padding:0;color:var(--leaf);font-weight:600;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.btn{appearance:none;border:0;cursor:pointer;width:100%;min-height:54px;border-radius:14px;background:var(--leaf);color:var(--leaf-ink);font-weight:600;font-size:17px;padding:14px 18px;margin-top:20px}
+.btn[disabled]{opacity:.55;cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--danger);border:1.5px solid var(--line);margin-top:12px;min-height:48px;font-size:15px}
+.formmsg{margin-top:12px;font-size:15px;color:var(--danger)}
+.fine{font-size:13px;color:var(--muted);margin-top:12px}
+.notice{font-size:16px}
+.notice h3{font-size:22px;margin-bottom:8px}
+
+/* pass */
+.pass{background:var(--hero);color:var(--hero-ink);border-radius:20px;padding:22px;margin-top:16px;position:relative;overflow:hidden}
+.pass::before,.pass::after{content:"";position:absolute;top:96px;width:22px;height:22px;border-radius:50%;background:var(--bg)}
+.pass::before{left:-11px}.pass::after{right:-11px}
+.pass-top{padding-bottom:20px;border-bottom:2px dashed rgba(255,255,255,.22)}
+.pass-top p{color:var(--sprout);font-weight:600;font-size:15px}
+.pass-top h3{font-size:30px;font-weight:800;margin-top:4px}
+.pass dl{display:grid;grid-template-columns:1fr 1fr;gap:14px 12px;margin:20px 0 0}
+.pass dt{font-size:13px;color:var(--hero-muted)}
+.pass dd{margin:2px 0 0;font-weight:600;overflow-wrap:anywhere}
+.pass .wide{grid-column:1/-1}
+.pass .btn.ghost{color:#FFB4A8;border-color:rgba(255,255,255,.22)}
+
+/* people */
+.people{list-style:none;margin:14px 0 0;padding:0}
+.people li{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid var(--line);font-size:15px}
+.people li:first-child{border-top:0}
+.people .n{font-weight:600;overflow-wrap:anywhere}
+.people .d{color:var(--muted);text-align:right;overflow-wrap:anywhere}
+.empty{color:var(--muted);margin-top:12px}
+
+/* organiser */
+details.admin{margin-top:16px;background:var(--surface);border:1px dashed var(--line);border-radius:20px;padding:16px 20px}
+details.admin summary{font-weight:600;cursor:pointer}
+.scroll{overflow-x:auto;margin-top:10px}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:760px}
+th,td{text-align:left;padding:8px 10px 8px 0;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--muted);font-weight:600}
+.rm{background:none;border:1px solid var(--line);border-radius:8px;padding:4px 10px;color:var(--danger);cursor:pointer;font-size:13px}
+.admin h3{font-size:18px;margin-top:18px}
+.admin .btn{margin-top:14px;min-height:48px;font-size:15px}
+textarea.csv{width:100%;min-height:140px;margin-top:10px;font:13px/1.4 ui-monospace,Menlo,Consolas,monospace;background:var(--field);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px}
+
+/* sticky bar */
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);padding:10px 20px calc(10px + env(safe-area-inset-bottom,0px));transform:translateY(110%);transition:transform .25s;z-index:5}
+.bar.show{transform:none}
+.bar-in{max-width:520px;margin:0 auto;display:flex;align-items:center;gap:14px}
+.bar-txt{flex:1;font-size:14px;color:var(--muted);line-height:1.25}
+.bar-txt strong{display:block;color:var(--ink);font-size:16px}
+.bar .btn{width:auto;margin:0;min-height:48px;padding:10px 22px}
+footer{color:var(--muted);font-size:13px;margin-top:40px}
+[hidden]{display:none!important}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="tabs" role="tablist" aria-label="Choose what to do">
+      <button type="button" role="tab" id="tabReg" aria-selected="true" aria-controls="register">Register</button>
+      <button type="button" role="tab" id="tabChk" aria-selected="false" aria-controls="checkin">Check in</button>
+    </div>
+    <p class="org">MBSB Group Consumer Banking CSR programme with Free Tree Society</p>
+    <h1><span>Roots for</span><span class="l2">Tomorrow</span></h1>
+    <p class="lede">Spend a Friday morning propagating and transplanting native rainforest saplings at Taman Tugu. Two dates, 25 volunteers each.</p>
+    <p class="where">Taman Tugu Nursery, Kuala Lumpur. <a href="https://www.google.com/maps/search/?api=1&query=Taman+Tugu+Nursery+Kuala+Lumpur" target="_blank" rel="noopener">Open in Maps</a></p>
+
+    <p class="pick" id="pickLabel">Pick your date</p>
+    <div class="trays" id="trays" role="radiogroup" aria-labelledby="pickLabel"></div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section id="register" aria-labelledby="regH">
+    <h2 id="regH">Save your seat</h2>
+    <p class="sec-note" id="regNote">Open to all Consumer Banking Division staff. One seat per person.</p>
+
+    <form class="card" id="form" novalidate>
+      <div class="chosen">
+        <span>Joining on<br><strong id="chosenDate">…</strong></span>
+        <button type="button" class="link" id="changeDate">Change date</button>
+      </div>
+
+      <label for="fName">Full name</label>
+      <input class="field" id="fName" name="name" autocomplete="name" maxlength="80" required>
+      <p class="err" id="eName" role="alert"></p>
+
+      <label for="fId">Staff ID</label>
+      <input class="field" id="fId" name="staffId" autocomplete="off" autocapitalize="characters" maxlength="15" inputmode="text" required>
+      <p class="err" id="eId" role="alert"></p>
+
+      <label for="fEmail">Email</label>
+      <input class="field" id="fEmail" name="email" type="email" inputmode="email" autocomplete="email" autocapitalize="none" maxlength="120" required>
+      <p class="err" id="eEmail" role="alert"></p>
+
+      <label for="fDept">Department</label>
+      <input class="field" id="fDept" name="dept" autocomplete="organization-title" maxlength="80" placeholder="e.g. Group Consumer Marketing" required>
+      <p class="err" id="eDept" role="alert"></p>
+
+      <button class="btn" id="submit" type="submit" disabled>Checking seats…</button>
+      <p class="formmsg" id="formMsg" role="alert" hidden></p>
+      <p class="fine">Your name and department appear in the volunteer list below. Your staff ID and email are shown only to the organiser.</p>
+    </form>
+
+    <div class="pass" id="pass" hidden>
+      <div class="pass-top">
+        <p>You're registered</p>
+        <h3 id="pDate"></h3>
+      </div>
+      <dl>
+        <div class="wide"><dt>Name</dt><dd id="pName"></dd></div>
+        <div><dt>Staff ID</dt><dd id="pId"></dd></div>
+        <div><dt>Seat</dt><dd id="pSeat"></dd></div>
+        <div class="wide"><dt>Email</dt><dd id="pEmail"></dd></div>
+        <div class="wide"><dt>Department</dt><dd id="pDept"></dd></div>
+        <div><dt>Arrive by</dt><dd id="pTime"></dd></div>
+        <div><dt>Venue</dt><dd>Taman Tugu Nursery</dd></div>
+        <div class="wide"><dt>Attendance</dt><dd id="pAtt"></dd></div>
+      </dl>
+      <button class="btn ghost" id="cancel" type="button">Cancel my seat</button>
+    </div>
+
+    <div class="card notice" id="notice" hidden>
+      <h3 id="noticeH"></h3>
+      <p id="noticeP"></p>
+    </div>
+  </section>
+
+  <section id="checkin" aria-labelledby="chkH" hidden>
+    <h2 id="chkH">Check in</h2>
+    <p class="sec-note" id="chkNote"></p>
+
+    <form class="card" id="chkForm" novalidate>
+      <label for="cId" style="margin-top:0">Staff ID</label>
+      <input class="field" id="cId" autocomplete="off" autocapitalize="characters" maxlength="15" required>
+      <label for="cCode">Check-in code</label>
+      <input class="field code-in" id="cCode" inputmode="numeric" pattern="[0-9]*" autocomplete="off" maxlength="4" placeholder="0000" required>
+      <button class="btn" id="chkBtn" type="submit">Check me in</button>
+      <p class="formmsg" id="chkMsg" role="alert" hidden></p>
+      <p class="fine">Scanning the QR at the venue fills in the code for you. It is also displayed there as 4 digits.</p>
+    </form>
+
+    <div class="pass" id="chkDone" hidden>
+      <div class="pass-top">
+        <p>You're checked in</p>
+        <h3 id="dName"></h3>
+      </div>
+      <dl>
+        <div class="wide"><dt>Session</dt><dd id="dDate"></dd></div>
+        <div><dt>Staff ID</dt><dd id="dId"></dd></div>
+        <div><dt>Checked in at</dt><dd id="dAt"></dd></div>
+      </dl>
+      <button class="btn ghost" id="chkAgain" type="button" style="color:var(--hero-ink)">Check in another person</button>
+    </div>
+
+    <div class="card notice" id="chkClosed" hidden>
+      <h3 id="chkClosedH"></h3>
+      <p id="chkClosedP"></p>
+    </div>
+  </section>
+
+  <section aria-labelledby="agH">
+    <h2 id="agH">The morning</h2>
+    <p class="sec-note" id="agNote"></p>
+    <ol class="agenda" id="agenda"></ol>
+  </section>
+
+  <section aria-labelledby="knH">
+    <h2 id="knH">Before you come</h2>
+    <ul class="know">
+      <li>Make your own way to the venue. There is no shuttle.</li>
+      <li>You'll be working with soil and walking a jungle trail, so wear covered shoes and clothes you don't mind getting dirty.</li>
+      <li>Bring a water bottle, a hat and insect repellent.</li>
+      <li>There is a group photo at the end.</li>
+      <li>Can't make it after all? Come back to this page and cancel so someone else can take your seat.</li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="whoH">
+    <h2 id="whoH">Who's coming</h2>
+    <p class="sec-note" id="whoNote"></p>
+    <ul class="people" id="people"></ul>
+    <p class="empty" id="peopleEmpty" hidden>No one yet. Be the first to sign up.</p>
+  </section>
+
+  <details class="admin" id="admin">
+    <summary>Organiser tools</summary>
+
+    <form id="loginForm" novalidate>
+      <p class="sec-note">For the event organiser only.</p>
+      <label for="lEmail">Organiser email</label>
+      <input class="field" id="lEmail" type="email" autocomplete="username" required>
+      <label for="lPass">Password</label>
+      <input class="field" id="lPass" type="password" autocomplete="current-password" required>
+      <button class="btn" id="loginBtn" type="submit">Sign in as organiser</button>
+      <p class="formmsg" id="loginMsg" role="alert" hidden></p>
+    </form>
+
+    <div id="adminBody" hidden>
+      <p class="sec-note">Signed in as <span id="who"></span>. <button type="button" class="link" id="signOutBtn">Sign out</button></p>
+      <h3>Registration QR</h3>
+      <p class="sec-note">Share this one in your invitation. It opens the sign-up page.</p>
+      <div class="qr" id="qrReg"></div>
+      <div id="adminTables"></div>
+      <button class="btn" type="button" id="csvBtn">Download volunteer list (CSV)</button>
+      <div class="reset">
+        <p class="sec-note">Testing only. This deletes every registration, attendance mark and check-in code for both dates.</p>
+        <button class="btn" type="button" id="resetBtn">Reset all data</button>
+      </div>
+    </div>
+  </details>
+
+  <footer>Roots for Tomorrow is run by Group Consumer Banking with Free Tree Society at Taman Tugu, a 66-acre urban rainforest held in trust by Amanah Warisan Negara.</footer>
+</main>
+
+<div class="bar" id="bar">
+  <div class="bar-in">
+    <p class="bar-txt"><strong id="barDate"></strong><span id="barLeft"></span></p>
+    <button class="btn" type="button" id="barBtn">Save your seat</button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script type="module">
+/* =====================================================================
+   1. FIREBASE SETTINGS: paste your own project's config here.
+      Firebase console > Project settings > Your apps > Web app.
+   ===================================================================== */
+const firebaseConfig = {
+  apiKey: "AIzaSyAalBvM8rG8iwWifAXNq0zo34FF3IAHBtw",
+  authDomain: "roots-for-tomorrow.firebaseapp.com",
+  projectId: "roots-for-tomorrow",
+  storageBucket: "roots-for-tomorrow.firebasestorage.app",
+  messagingSenderId: "716398847554",
+  appId: "1:716398847554:web:8001cb453d6a81ceeeafdb",
+};
+
+/* =====================================================================
+   2. EVENT SETTINGS: dates, times and agenda.
+      If you change a date here, change it in firestore.rules as well.
+   ===================================================================== */
+const CAP = 25;   // seats per date (the rules file also enforces 25)
+const AGENDA = [
+  ["10:00am", "Arrival and introduction to Free Tree Society"],
+  ["10:10am", "Planting demo and planting workshop", true],
+  ["10:50am", "Sustainable solutions talk: water and waste"],
+  ["11:10am", "Break"],
+  ["11:15am", "Biodiversity conservation walk and climate talk (jungle walk)", true],
+  ["12:00pm", "Closing speech"],
+  ["12:10pm", "Photography session"],
+  ["12:20pm", "Dismissal"]
+];
+const SESSIONS = [
+  { id: "2026-10-16", short: "16 Oct", day: "Friday", long: "Friday, 16 October 2026", start: "10:00am", end: "12:20pm", agenda: AGENDA },
+  { id: "2026-11-20", short: "20 Nov", day: "Friday", long: "Friday, 20 November 2026", start: "10:00am", end: "12:20pm", agenda: AGENDA }
+];
+/* ===================================================================== */
+
+const FB = "https://www.gstatic.com/firebasejs/10.12.5/";
+const $ = id => document.getElementById(id);
+const SAPLING = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22v-9" stroke="#1F3D2B" stroke-width="2.2" stroke-linecap="round" fill="none"/><path d="M12 14C12 9 8.5 6.5 4 7c0 4.5 3 7.5 8 7z" fill="#1F3D2B"/><path d="M12 11c0-4.5 3-7.5 8-7.5 0 5-3 8-8 7.5z" fill="#1F3D2B"/></svg>';
+const SEAT_IDS = Array.from({ length: CAP }, (_, i) => String(i + 1).padStart(2, "0"));
+const hash = decodeURIComponent(location.hash || "");
+const hashCode = (hash.match(/checkin=(\d{4})/i) || [])[1] || "";
+
+let F = null, fdb = null, auth = null;   // Firebase modules, Firestore, Auth
+const S = {
+  status: "loading", why: "",   // loading | ready | offline
+  uid: null, admin: false, adminEmail: "",
+  seats: {}, loaded: {}, checkin: {}, secret: {}, staffBySeat: {}, emailBySeat: {},
+  selected: null, busy: false, justPlanted: null, reg: null,
+  confirmCancel: false, confirmRm: null, confirmReset: false,
+  tab: /checkin/i.test(hash) ? "checkin" : "register", tabTouched: false,
+  chkDone: null, chkBusy: false, adminUnsubs: []
+};
+SESSIONS.forEach(s => { S.seats[s.id] = {}; S.loaded[s.id] = false; });
+try { S.reg = JSON.parse(localStorage.getItem("rft-reg") || "null"); } catch (e) {}
+const saveReg = r => { S.reg = r; try { r ? localStorage.setItem("rft-reg", JSON.stringify(r)) : localStorage.removeItem("rft-reg"); } catch (e) {} };
+
+const sess = id => SESSIONS.find(s => s.id === id);
+const taken = id => Object.keys(S.seats[id]).length;
+const left = id => Math.max(0, CAP - taken(id));
+const isPast = s => { const [y, m, d] = s.id.split("-").map(Number); return Date.now() > new Date(y, m - 1, d, 23, 59, 59).getTime(); };
+const isOpen = s => !isPast(s) && left(s.id) > 0;
+const allLoaded = () => SESSIONS.every(s => S.loaded[s.id]);
+const timeOf = t => t ? new Date(t).toLocaleTimeString("en-MY", { hour: "numeric", minute: "2-digit" }) : "";
+const chkOpen = s => !!(S.checkin[s.id] && S.checkin[s.id].open);
+const attendedCount = id => SEAT_IDS.filter(x => S.seats[id][x] && S.seats[id][x].attended).length;
+const millis = t => (t && typeof t.toMillis === "function") ? t.toMillis() : (Number(t) || 0);
+const seatRef = (sid, seat) => F.doc(fdb, "sessions", sid, "seats", seat);
+const attRef = (sid, seat) => F.doc(fdb, "sessions", sid, "attendance", seat);
+const privRef = (sid, seat) => F.doc(fdb, "sessions", sid, "private", seat);
+const clean = v => v.replace(/\s+/g, " ").trim();
+const normId = v => clean(v).toUpperCase().replace(/\s/g, "");
+
+function mine() {
+  const r = S.reg; if (!r || !S.seats[r.sid]) return null;
+  const d = S.seats[r.sid][r.seat];
+  if (!d || d.uid !== r.uid) return null;
+  return { s: sess(r.sid), seat: r.seat, d: Object.assign({}, d, { staffId: r.staffId, email: r.email || "" }) };
+}
+
+/* ---------- rendering ---------- */
+function statusText(s) {
+  if (S.status === "loading" || (S.status === "ready" && !S.loaded[s.id])) return ["Checking seats…", ""];
+  if (S.status === "offline") return ["Seat count unavailable", ""];
+  if (isPast(s)) return ["Registration closed", "full"];
+  const l = left(s.id);
+  if (l === 0) return ["Full, all " + CAP + " seats taken", "full"];
+  return [l + " of " + CAP + " seats left", ""];
+}
+
+function renderTrays() {
+  const box = $("trays"), me = mine();
+  box.textContent = "";
+  SESSIONS.forEach(s => {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "tray"; b.setAttribute("role", "radio");
+    b.setAttribute("aria-checked", S.selected === s.id ? "true" : "false");
+    const blocked = S.status === "ready" && S.loaded[s.id] && !isOpen(s);
+    if (blocked || me) b.disabled = true;
+    const [txt, cls] = statusText(s);
+    b.setAttribute("aria-label", s.long + ", " + s.start + " to " + s.end + ". " + txt);
+    const head = document.createElement("div"); head.className = "tray-head";
+    const dt = document.createElement("div");
+    const d1 = document.createElement("div"); d1.className = "tray-date"; d1.textContent = s.short;
+    const d2 = document.createElement("div"); d2.className = "tray-sub"; d2.textContent = s.day + ", " + s.start + " to " + s.end;
+    dt.append(d1, d2);
+    const r = document.createElement("span"); r.className = "radio"; r.setAttribute("aria-hidden", "true");
+    head.append(dt, r);
+    const cells = document.createElement("div"); cells.className = "cells"; cells.setAttribute("aria-hidden", "true");
+    SEAT_IDS.forEach(seat => {
+      const c = document.createElement("span"); c.className = "cell";
+      if (S.seats[s.id][seat]) {
+        c.classList.add("on"); c.innerHTML = SAPLING;
+        if (me && me.s.id === s.id && me.seat === seat) c.classList.add("mine");
+        if (S.justPlanted === s.id + "/" + seat) c.classList.add("grow");
+      }
+      cells.append(c);
+    });
+    const st = document.createElement("div"); st.className = "tray-status " + cls; st.textContent = txt;
+    b.append(head, cells, st);
+    b.addEventListener("click", () => { S.selected = s.id; S.confirmCancel = false; render(); });
+    box.append(b);
+  });
+  S.justPlanted = null;
+}
+
+function renderAgenda() {
+  const s = sess(S.selected) || SESSIONS[0];
+  $("agNote").textContent = s.long + ", " + s.start + " to " + s.end;
+  const ol = $("agenda"); ol.textContent = "";
+  s.agenda.forEach(([t, what, key]) => {
+    const li = document.createElement("li"); if (key) li.className = "key";
+    const tm = document.createElement("time"); tm.textContent = t;
+    const w = document.createElement("span"); w.className = "what"; w.textContent = what;
+    li.append(tm, w); ol.append(li);
+  });
+}
+
+function showNotice(h, p) { $("noticeH").textContent = h; $("noticeP").textContent = p; $("notice").hidden = false; }
+function offlineText() {
+  return S.why === "config"
+    ? ["Setup isn't finished", "The Firebase settings haven't been added to this page yet. Organiser: follow the setup guide, then reload."]
+    : ["Can't reach the registration list", "Check your internet connection and reload the page. If it still doesn't load, contact the organiser."];
+}
+
+function renderRegister() {
+  const me = mine(), form = $("form"), pass = $("pass"), btn = $("submit");
+  $("notice").hidden = true; form.hidden = false; pass.hidden = true;
+  if (S.status === "offline") { form.hidden = true; showNotice(...offlineText()); return; }
+  if (me) {
+    form.hidden = true; pass.hidden = false;
+    $("pDate").textContent = me.s.long;
+    $("pName").textContent = me.d.name; $("pId").textContent = me.d.staffId;
+    $("pSeat").textContent = Number(me.seat) + " of " + CAP;
+    $("pEmail").textContent = me.d.email; $("pDept").textContent = me.d.dept; $("pTime").textContent = me.s.start;
+    $("pAtt").textContent = me.d.attended ? "Checked in" + (me.d.attendedAt ? " at " + timeOf(me.d.attendedAt) : "") : "Not checked in yet. Scan the QR at the venue on the day.";
+    const c = $("cancel");
+    c.hidden = isPast(me.s) || !!me.d.attended;
+    c.textContent = S.busy ? "Cancelling…" : S.confirmCancel ? "Tap again to give up your seat" : "Cancel my seat";
+    c.disabled = S.busy;
+    return;
+  }
+  if (S.status === "ready" && allLoaded() && !SESSIONS.some(isOpen)) {
+    form.hidden = true;
+    const allPast = SESSIONS.every(isPast);
+    showNotice(allPast ? "Registration has closed" : "Both dates are full",
+      allPast ? "Both sessions have taken place. Thank you to everyone who volunteered."
+              : "All " + (CAP * SESSIONS.length) + " seats have been taken. If someone cancels, a seat will open up here, so check back later.");
+    return;
+  }
+  const s = sess(S.selected);
+  $("chosenDate").textContent = s ? s.short + ", " + s.start : "…";
+  const ready = S.status === "ready" && allLoaded() && s && isOpen(s);
+  btn.disabled = !ready || S.busy;
+  btn.textContent = S.busy ? "Saving your seat…" : ready ? "Save my seat for " + s.short : "Checking seats…";
+}
+
+function renderPeople() {
+  const s = sess(S.selected) || SESSIONS[0];
+  const ul = $("people"); ul.textContent = "";
+  const rows = SEAT_IDS.map(seat => S.seats[s.id][seat]).filter(Boolean).sort((a, b) => (a.at || 0) - (b.at || 0));
+  $("whoNote").textContent = S.status === "ready" ? s.long + ": " + rows.length + " of " + CAP + " volunteers" : s.long;
+  rows.forEach(d => {
+    const li = document.createElement("li");
+    const n = document.createElement("span"); n.className = "n"; n.textContent = d.name;
+    const dp = document.createElement("span"); dp.className = "d"; dp.textContent = d.dept;
+    li.append(n, dp); ul.append(li);
+  });
+  $("peopleEmpty").hidden = rows.length > 0 || S.status !== "ready";
+}
+
+/* ---------- QR + downloads ---------- */
+function saveBlob(blob, name) {
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+function qrBlock(url, filename) {
+  const frag = document.createDocumentFragment();
+  if (window.qrcode) {
+    const q = window.qrcode(0, "M"); q.addData(url); q.make();
+    const n = q.getModuleCount(), m = 4, cell = 10;
+    const c = document.createElement("canvas"); c.width = c.height = (n + m * 2) * cell; c.style.width = "200px";
+    const x = c.getContext("2d"); x.fillStyle = "#fff"; x.fillRect(0, 0, c.width, c.height); x.fillStyle = "#000";
+    for (let r = 0; r < n; r++) for (let k = 0; k < n; k++) if (q.isDark(r, k)) x.fillRect((k + m) * cell, (r + m) * cell, cell, cell);
+    c.setAttribute("role", "img"); c.setAttribute("aria-label", "QR code for " + url);
+    const b = document.createElement("button"); b.type = "button"; b.className = "mini"; b.textContent = "Download QR image";
+    b.addEventListener("click", () => c.toBlob(bl => bl && saveBlob(bl, filename)));
+    frag.append(c, b);
+  }
+  const u = document.createElement("div"); u.className = "url"; u.textContent = url; frag.append(u);
+  return frag;
+}
+const baseUrl = () => location.origin + location.pathname;
+
+function renderAdmin() {
+  $("loginForm").hidden = S.admin; $("adminBody").hidden = !S.admin;
+  if (!S.admin) return;
+  $("who").textContent = S.adminEmail;
+  $("resetBtn").textContent = S.busy && S.confirmReset ? "Resetting…" : S.confirmReset ? "Tap again to delete everything" : "Reset all data";
+  const qr = $("qrReg"); if (!qr.firstChild) qr.append(qrBlock(baseUrl(), "qr-registration.png"));
+  const box = $("adminTables"); box.textContent = "";
+  SESSIONS.forEach(s => {
+    const h = document.createElement("h3"); h.textContent = s.long; box.append(h);
+    const sum = document.createElement("p"); sum.className = "sec-note";
+    sum.textContent = taken(s.id) + " of " + CAP + " registered, " + attendedCount(s.id) + " attended, " + (taken(s.id) - attendedCount(s.id)) + " not yet";
+    box.append(sum);
+
+    const ctl = document.createElement("div"); ctl.className = "chk-ctl";
+    const cl = document.createElement("div"), cb = document.createElement("button");
+    cb.type = "button"; cb.className = "mini";
+    const code = S.secret[s.id] || "";
+    if (chkOpen(s)) {
+      const a = document.createElement("div"); a.textContent = "Check-in is open. Code";
+      const c = document.createElement("div"); c.className = "chk-code"; c.textContent = code || "…";
+      cl.append(a, c); cb.textContent = "Close check-in";
+      cb.addEventListener("click", () => setCheckin(s.id, false));
+    } else {
+      cl.textContent = "Check-in is closed" + (code ? ". Code " + code : ""); cb.textContent = "Open check-in"; cb.classList.add("on");
+      cb.addEventListener("click", () => setCheckin(s.id, true));
+    }
+    ctl.append(cl, cb); box.append(ctl);
+    if (code) {
+      const p = document.createElement("p"); p.className = "sec-note"; p.textContent = "Attendance QR for " + s.short + ". Display it at the venue only.";
+      const q = document.createElement("div"); q.className = "qr";
+      q.append(qrBlock(baseUrl() + "#checkin=" + code, "qr-attendance-" + s.id + ".png"));
+      box.append(p, q);
+    }
+
+    const rows = SEAT_IDS.filter(seat => S.seats[s.id][seat]);
+    if (!rows.length) { const p = document.createElement("p"); p.className = "empty"; p.textContent = "No registrations yet."; box.append(p); return; }
+    const sc = document.createElement("div"); sc.className = "scroll";
+    const t = document.createElement("table");
+    t.innerHTML = "<thead><tr><th>Seat</th><th>Name</th><th>Staff ID</th><th>Email</th><th>Department</th><th>Attendance</th><th></th></tr></thead>";
+    const tb = document.createElement("tbody");
+    rows.forEach(seat => {
+      const d = S.seats[s.id][seat], tr = document.createElement("tr"), key = s.id + "/" + seat;
+      [Number(seat), d.name, S.staffBySeat[key] || "", S.emailBySeat[key] || "", d.dept].forEach(v => { const td = document.createElement("td"); td.textContent = v; tr.append(td); });
+      const ta = document.createElement("td"), ab = document.createElement("button");
+      ab.type = "button"; ab.className = "mini" + (d.attended ? " on" : "");
+      ab.textContent = d.attended ? "Present" + (d.attendedAt ? " " + timeOf(d.attendedAt) : "") : "Mark present";
+      ab.setAttribute("aria-pressed", d.attended ? "true" : "false");
+      ab.addEventListener("click", () => markAttend(s.id, seat, !d.attended));
+      ta.append(ab); tr.append(ta);
+      const td = document.createElement("td"), rm = document.createElement("button");
+      rm.type = "button"; rm.className = "rm"; rm.textContent = S.confirmRm === key ? "Confirm remove" : "Remove";
+      rm.addEventListener("click", () => removeSeat(s.id, seat));
+      td.append(rm); tr.append(td); tb.append(tr);
+    });
+    t.append(tb); sc.append(t); box.append(sc);
+  });
+}
+
+let formInView = false;
+function renderBar() {
+  const s = sess(S.selected), me = mine();
+  const show = S.status === "ready" && allLoaded() && !me && s && isOpen(s) && !formInView && S.tab === "register";
+  $("bar").classList.toggle("show", !!show);
+  if (s) { $("barDate").textContent = s.short + ", " + s.start; $("barLeft").textContent = left(s.id) + " seats left"; }
+}
+
+function renderTabs() {
+  const chk = S.tab === "checkin";
+  document.body.classList.toggle("mode-checkin", chk);
+  $("tabReg").setAttribute("aria-selected", chk ? "false" : "true");
+  $("tabChk").setAttribute("aria-selected", chk ? "true" : "false");
+  $("register").hidden = chk; $("checkin").hidden = !chk;
+}
+
+function chkMsg(t) { const m = $("chkMsg"); m.textContent = t || ""; m.hidden = !t; }
+function renderCheckin() {
+  const form = $("chkForm"), done = $("chkDone"), closed = $("chkClosed");
+  form.hidden = done.hidden = closed.hidden = true;
+  const open = SESSIONS.filter(chkOpen);
+  $("chkNote").textContent = open.length ? "For " + open.map(s => s.long).join(" and ") : "For registered volunteers, at the venue on the day.";
+  if (S.chkDone) {
+    done.hidden = false;
+    $("dName").textContent = S.chkDone.name; $("dDate").textContent = S.chkDone.s.long;
+    $("dId").textContent = S.chkDone.staffId; $("dAt").textContent = timeOf(S.chkDone.at) || "Recorded";
+    return;
+  }
+  if (S.status === "offline") { closed.hidden = false; const [h, p] = offlineText(); $("chkClosedH").textContent = h; $("chkClosedP").textContent = p; return; }
+  if (!open.length) {
+    closed.hidden = false; $("chkClosedH").textContent = S.status === "loading" ? "Loading…" : "Check-in isn't open yet";
+    $("chkClosedP").textContent = S.status === "loading" ? "" : "It opens at the venue on the day of your session. Scan the attendance QR there, or enter the 4-digit code the organiser shows you.";
+    return;
+  }
+  form.hidden = false;
+  const me = mine();
+  if (me && !$("cId").value && document.activeElement !== $("cId")) $("cId").value = me.d.staffId;
+  if (hashCode && !$("cCode").value && document.activeElement !== $("cCode")) $("cCode").value = hashCode;
+  $("chkBtn").disabled = S.chkBusy; $("chkBtn").textContent = S.chkBusy ? "Checking you in…" : "Check me in";
+}
+
+function render() {
+  if (S.reg && S.status === "ready" && allLoaded() && !mine()) saveReg(null);   // seat was removed or reset
+  if (S.status === "ready" && allLoaded() && !mine()) {
+    const cur = sess(S.selected);
+    if (!cur || !isOpen(cur)) { const next = SESSIONS.find(isOpen); if (next) S.selected = next.id; }
+  }
+  const me = mine(); if (me) S.selected = me.s.id;
+  if (!S.selected) S.selected = (SESSIONS.find(s => !isPast(s)) || SESSIONS[0]).id;
+  renderTrays(); renderRegister(); renderAgenda(); renderPeople(); renderAdmin(); renderBar(); renderTabs(); renderCheckin();
+}
+
+/* ---------- register ---------- */
+function validate() {
+  const name = clean($("fName").value), staffId = normId($("fId").value), dept = clean($("fDept").value), email = clean($("fEmail").value).toLowerCase();
+  const e = { name: "", id: "", dept: "", email: "" };
+  if (!email) e.email = "Enter your email address.";
+  else if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) e.email = "Enter a full email address, like name@company.com.";
+  if (name.length < 3) e.name = "Enter your full name as it appears on your staff record.";
+  if (!staffId) e.id = "Enter your staff ID.";
+  else if (!/^[A-Z0-9\-]{3,15}$/.test(staffId)) e.id = "Staff ID should be 3 to 15 letters or numbers, with no spaces.";
+  if (dept.length < 2) e.dept = "Enter your department or unit.";
+  [["fName", "eName", e.name], ["fId", "eId", e.id], ["fEmail", "eEmail", e.email], ["fDept", "eDept", e.dept]].forEach(([f, el, msg]) => {
+    $(el).textContent = msg; $(f).setAttribute("aria-invalid", msg ? "true" : "false");
+  });
+  const bad = e.name ? "fName" : e.id ? "fId" : e.email ? "fEmail" : e.dept ? "fDept" : null;
+  if (bad) { $(bad).focus(); return null; }
+  return { name, staffId, dept, email };
+}
+function formMsg(t) { const m = $("formMsg"); m.textContent = t || ""; m.hidden = !t; }
+
+$("form").addEventListener("submit", async ev => {
+  ev.preventDefault();
+  if (S.busy || S.status !== "ready") return;
+  formMsg("");
+  const v = validate(); if (!v) return;
+  const s = sess(S.selected); if (!s) return;
+  const uid = auth.currentUser && auth.currentUser.uid;
+  if (!uid) { formMsg("Still connecting. Wait a few seconds and tap the button again."); return; }
+  if (isPast(s)) { formMsg("Registration for " + s.short + " has closed."); return; }
+  S.busy = true; render();
+  try {
+    // A transaction: either this person gets exactly one free seat, or nothing is written.
+    const seat = await F.runTransaction(fdb, async tx => {
+      const sref = F.doc(fdb, "staff", v.staffId);
+      const st = await tx.get(sref);
+      if (st.exists()) throw { app: "dup", sid: st.data().sid };
+      const order = SEAT_IDS.filter(x => !S.seats[s.id][x]).concat(SEAT_IDS.filter(x => S.seats[s.id][x]));
+      let got = null;
+      for (const id of order) { const snap = await tx.get(seatRef(s.id, id)); if (!snap.exists()) { got = id; break; } }
+      if (!got) throw { app: "full" };
+      tx.set(seatRef(s.id, got), { name: v.name, dept: v.dept, uid, at: F.serverTimestamp() });
+      tx.set(sref, { sid: s.id, seat: got, uid });
+      tx.set(privRef(s.id, got), { email: v.email, uid });
+      return got;
+    });
+    saveReg({ sid: s.id, seat, staffId: v.staffId, email: v.email, uid });
+    if (!S.seats[s.id][seat]) S.seats[s.id][seat] = { name: v.name, dept: v.dept, uid, at: Date.now(), attended: false, attendedAt: 0 };
+    S.justPlanted = s.id + "/" + seat;
+    $("form").reset();
+    setTimeout(() => $("register").scrollIntoView({ block: "start" }), 50);
+  } catch (err) {
+    if (err && err.app === "dup") { const o = sess(err.sid); formMsg("Staff ID " + v.staffId + " is already registered" + (o ? " for " + o.short : "") + ". Each person can join one date."); }
+    else if (err && err.app === "full") {
+      const other = SESSIONS.find(o => o.id !== s.id && isOpen(o));
+      formMsg(s.short + " just filled up." + (other ? " " + other.short + " still has seats. Pick it above and try again." : ""));
+    }
+    else formMsg("Your seat wasn't saved. Check your connection and tap the button again.");
+  } finally { S.busy = false; render(); }
+});
+
+$("cancel").addEventListener("click", async () => {
+  const me = mine(); if (!me || S.busy) return;
+  if (!S.confirmCancel) { S.confirmCancel = true; render(); return; }
+  S.busy = true; render();
+  try {
+    const b = F.writeBatch(fdb);
+    b.delete(seatRef(me.s.id, me.seat)); b.delete(F.doc(fdb, "staff", me.d.staffId)); b.delete(privRef(me.s.id, me.seat));
+    await b.commit();
+    delete S.seats[me.s.id][me.seat]; saveReg(null);
+  } catch (e) {}
+  S.busy = false; S.confirmCancel = false; render();
+});
+
+/* ---------- check in ---------- */
+$("chkForm").addEventListener("submit", async ev => {
+  ev.preventDefault(); if (S.chkBusy) return; chkMsg("");
+  const staffId = normId($("cId").value), code = clean($("cCode").value);
+  if (!/^[A-Z0-9\-]{3,15}$/.test(staffId)) { chkMsg("Enter your staff ID."); $("cId").focus(); return; }
+  if (!/^\d{4}$/.test(code)) { chkMsg("Enter the 4-digit code shown at the venue."); $("cCode").focus(); return; }
+  const uid = auth.currentUser && auth.currentUser.uid;
+  if (!uid) { chkMsg("Still connecting. Wait a few seconds and try again."); return; }
+  const open = SESSIONS.filter(chkOpen);
+  S.chkBusy = true; render();
+  try {
+    const st = await F.getDoc(F.doc(fdb, "staff", staffId));
+    const reg = st.exists() ? st.data() : null;
+    const s = reg && open.find(o => o.id === reg.sid);
+    const d = s && S.seats[s.id][reg.seat];
+    if (!d) { chkMsg("Staff ID " + staffId + " isn't on the list for " + open.map(o => o.short).join(" or ") + ". Check the ID, or see the organiser."); return; }
+    if (d.attended) { S.chkDone = { s, name: d.name, staffId, at: d.attendedAt }; return; }
+    try {
+      const b = F.writeBatch(fdb);
+      b.set(attRef(s.id, reg.seat), { staffId, code, uid, at: F.serverTimestamp() });
+      b.update(seatRef(s.id, reg.seat), { attended: true, attendedAt: F.serverTimestamp() });
+      await b.commit();
+    } catch (e) {
+      chkMsg(e && e.code === "permission-denied" ? "That code doesn't match. Scan the attendance QR at the venue again, or type the code shown there." : "Your check-in wasn't saved. Check your signal and try again, or ask the organiser to mark you present.");
+      return;
+    }
+    S.chkDone = { s, name: d.name, staffId, at: Date.now() };
+    $("chkForm").reset();
+  } catch (e) { chkMsg("Your check-in wasn't saved. Check your signal and try again."); }
+  finally { S.chkBusy = false; render(); }
+});
+$("chkAgain").addEventListener("click", () => { S.chkDone = null; render(); $("cId").focus(); });
+
+/* ---------- organiser ---------- */
+function loginMsg(t) { const m = $("loginMsg"); m.textContent = t || ""; m.hidden = !t; }
+$("loginForm").addEventListener("submit", async ev => {
+  ev.preventDefault(); loginMsg("");
+  if (!auth) { loginMsg("Not connected yet. Reload the page and try again."); return; }
+  $("loginBtn").disabled = true;
+  try { await F.signInWithEmailAndPassword(auth, $("lEmail").value.trim(), $("lPass").value); $("lPass").value = ""; }
+  catch (e) { loginMsg("Sign-in failed. Check the email and password."); }
+  $("loginBtn").disabled = false;
+});
+$("signOutBtn").addEventListener("click", () => F.signOut(auth));
+
+function startAdmin(user) {
+  stopAdmin();
+  const denied = () => { stopAdmin(); S.admin = false; loginMsg("This account isn't set up as an organiser. Check the email in your Firestore rules."); F.signOut(auth); };
+  S.adminUnsubs.push(F.onSnapshot(F.collection(fdb, "staff"), snap => {
+    const m = {}; snap.docs.forEach(d => { const x = d.data(); m[x.sid + "/" + x.seat] = d.id; });
+    S.staffBySeat = m; S.admin = true; S.adminEmail = user.email || ""; render();
+  }, denied));
+  SESSIONS.forEach(s => S.adminUnsubs.push(F.onSnapshot(F.collection(fdb, "sessions", s.id, "private"), snap => {
+    Object.keys(S.emailBySeat).forEach(k => { if (k.startsWith(s.id + "/")) delete S.emailBySeat[k]; });
+    snap.docs.forEach(d => { S.emailBySeat[s.id + "/" + d.id] = String(d.data().email || ""); }); render();
+  }, () => {})));
+  S.adminUnsubs.push(F.onSnapshot(F.collection(fdb, "checkinSecret"), snap => {
+    const m = {}; snap.docs.forEach(d => { m[d.id] = String(d.data().code || ""); }); S.secret = m; render();
+  }, () => {}));
+}
+function stopAdmin() { S.adminUnsubs.forEach(u => { try { u(); } catch (e) {} }); S.adminUnsubs = []; S.staffBySeat = {}; S.emailBySeat = {}; S.secret = {}; }
+
+async function setCheckin(sid, open) {
+  try {
+    const b = F.writeBatch(fdb);
+    b.set(F.doc(fdb, "checkin", sid), { open });
+    if (open && !S.secret[sid]) b.set(F.doc(fdb, "checkinSecret", sid), { code: String(Math.floor(1000 + Math.random() * 9000)) });
+    await b.commit();
+  } catch (e) {}
+}
+async function markAttend(sid, seat, on) {
+  try {
+    const b = F.writeBatch(fdb);
+    b.update(seatRef(sid, seat), on ? { attended: true, attendedAt: F.serverTimestamp() } : { attended: false, attendedAt: null });
+    if (!on) b.delete(attRef(sid, seat));
+    await b.commit();
+  } catch (e) {}
+}
+async function removeSeat(sid, seat) {
+  const key = sid + "/" + seat;
+  if (S.confirmRm !== key) { S.confirmRm = key; renderAdmin(); return; }
+  S.confirmRm = null;
+  try {
+    const b = F.writeBatch(fdb);
+    b.delete(seatRef(sid, seat)); b.delete(attRef(sid, seat)); b.delete(privRef(sid, seat));
+    if (S.staffBySeat[key]) b.delete(F.doc(fdb, "staff", S.staffBySeat[key]));
+    await b.commit();
+  } catch (e) {}
+  render();
+}
+$("resetBtn").addEventListener("click", async () => {
+  if (S.busy) return;
+  if (!S.confirmReset) { S.confirmReset = true; renderAdmin(); setTimeout(() => { if (!S.busy) { S.confirmReset = false; renderAdmin(); } }, 5000); return; }
+  S.busy = true; render();
+  try {
+    const cols = [F.collection(fdb, "staff"), F.collection(fdb, "checkin"), F.collection(fdb, "checkinSecret")];
+    SESSIONS.forEach(s => cols.push(F.collection(fdb, "sessions", s.id, "seats"), F.collection(fdb, "sessions", s.id, "attendance"), F.collection(fdb, "sessions", s.id, "private")));
+    const b = F.writeBatch(fdb);
+    for (const c of cols) { const snap = await F.getDocs(c); snap.docs.forEach(d => b.delete(d.ref)); }
+    await b.commit();
+    saveReg(null); S.chkDone = null;
+  } catch (e) {}
+  S.busy = false; S.confirmReset = false; render();
+});
+
+function csvCell(v) {
+  let t = String(v == null ? "" : v);
+  if (/^[=+\-@]/.test(t)) t = "'" + t;
+  return '"' + t.replace(/"/g, '""') + '"';
+}
+$("csvBtn").addEventListener("click", () => {
+  const lines = [["Date", "Seat", "Name", "Staff ID", "Email", "Department", "Registered at", "Attended", "Checked in at"].map(csvCell).join(",")];
+  SESSIONS.forEach(s => SEAT_IDS.forEach(seat => {
+    const d = S.seats[s.id][seat]; if (!d) return;
+    lines.push([s.long, Number(seat), d.name, S.staffBySeat[s.id + "/" + seat] || "", S.emailBySeat[s.id + "/" + seat] || "", d.dept, d.at ? new Date(d.at).toLocaleString("en-MY") : "",
+      d.attended ? "Yes" : "No", d.attended && d.attendedAt ? new Date(d.attendedAt).toLocaleString("en-MY") : ""].map(csvCell).join(","));
+  }));
+  saveBlob(new Blob(["\uFEFF" + lines.join("\r\n")], { type: "text/csv" }), "roots-for-tomorrow-volunteers.csv");
+});
+
+/* ---------- small wiring ---------- */
+function setTab(t) { S.tab = t; S.tabTouched = true; render(); window.scrollTo(0, 0); }
+$("tabReg").addEventListener("click", () => setTab("register"));
+$("tabChk").addEventListener("click", () => setTab("checkin"));
+$("changeDate").addEventListener("click", () => $("trays").scrollIntoView({ block: "center" }));
+$("barBtn").addEventListener("click", () => { $("register").scrollIntoView({ block: "start" }); setTimeout(() => $("fName").focus({ preventScroll: true }), 400); });
+if ("IntersectionObserver" in window) {
+  new IntersectionObserver(es => { formInView = es[0].isIntersecting; renderBar(); }, { threshold: 0.15 }).observe($("register"));
+}
+
+/* ---------- start ---------- */
+render();
+(async function start() {
+  if (/^PASTE_/.test(firebaseConfig.apiKey)) { S.status = "offline"; S.why = "config"; render(); return; }
+  try {
+    const [a, b, c] = await Promise.all([import(FB + "firebase-app.js"), import(FB + "firebase-auth.js"), import(FB + "firebase-firestore.js")]);
+    F = Object.assign({}, a, b, c);
+    const app = F.initializeApp(firebaseConfig);
+    auth = F.getAuth(app); fdb = F.getFirestore(app);
+  } catch (e) { S.status = "offline"; S.why = "net"; render(); return; }
+
+  F.onAuthStateChanged(auth, user => {
+    if (!user) { stopAdmin(); S.admin = false; S.uid = null; render(); F.signInAnonymously(auth).catch(() => {}); return; }
+    S.uid = user.uid;
+    if (user.isAnonymous) { stopAdmin(); S.admin = false; render(); } else startAdmin(user);
+  });
+
+  SESSIONS.forEach(s => {
+    F.onSnapshot(F.collection(fdb, "sessions", s.id, "seats"), snap => {
+      const m = {};
+      snap.docs.forEach(doc => {
+        const d = doc.data();
+        if (d && SEAT_IDS.includes(doc.id)) m[doc.id] = { name: String(d.name || ""), dept: String(d.dept || ""), uid: d.uid || null, at: millis(d.at), attended: d.attended === true, attendedAt: millis(d.attendedAt) };
+      });
+      S.seats[s.id] = m; S.loaded[s.id] = true; S.status = "ready"; render();
+    }, () => { if (!S.loaded[s.id]) { S.status = "offline"; S.why = "net"; render(); } });
+  });
+  F.onSnapshot(F.collection(fdb, "checkin"), snap => {
+    const m = {}; snap.docs.forEach(d => { m[d.id] = { open: d.data().open === true }; });
+    S.checkin = m;
+    if (!S.tabTouched && SESSIONS.some(chkOpen) && mine() && !mine().d.attended) S.tab = "checkin";
+    render();
+  }, () => {});
+})();
+
+</script>
+</body>
+</html>
